@@ -9,11 +9,10 @@ import {useNavigate} from "react-router-dom";
 import {AppDataContext} from "../Context/DataContext";
 import UserListSortSelector from "./UserListSortSelector";
 
-
 function Header(props) {
     const data = useContext(AppDataContext)
     const navigate = useNavigate()
-    const fullName = data.currentUser.first_name + " " + data.currentUser.last_name
+    const fullName = props.currentUser.result[0].first_name + " " + props.currentUser.result[0].last_name
 
     const logout = () => {
         AuthService.logout()

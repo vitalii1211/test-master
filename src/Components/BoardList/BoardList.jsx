@@ -27,11 +27,10 @@ function BoardList({API_URL}) {
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [sortType, setSortType] = useState("")
     const [activeTodo, setActiveTodo] = useState(null)
-    const [activeUser, setActiveUser] = useState(null)
+    const [currentUser, setCurrentUser] = useState(getCurrentUser)
 
     const items = data.todoList
     const containers = data.userList
-
 
     const sensors = useSensors(
         useSensor(MouseSensor, {
@@ -114,7 +113,7 @@ function BoardList({API_URL}) {
         const activeTodo = data.todoList.find(todo => todo.id === active.id)
         const activeUser = data.userList.map(user => user.id === activeTodo.author)
         setActiveTodo(activeTodo)
-        setActiveUser(activeUser)
+        setCurrentUser(activeUser)
     }
 
     function dragOverHandler(event) {
@@ -203,6 +202,7 @@ function BoardList({API_URL}) {
                 setSelectedUsers={setSelectedUsers}
                 sortType={sortType}
                 setSortType={setSortType}
+                currentUser={currentUser}
             />
             <DndContext
                 sensors={sensors}
@@ -237,7 +237,7 @@ function BoardList({API_URL}) {
                         editMode={editMode}
                         searchItem={searchItem}
                         setSearchItem={setSearchItem}
-                        user={activeUser}
+                        user={currentUser}
                         todolistFinal={data.todoList}
                     />
                 </DragOverlay>

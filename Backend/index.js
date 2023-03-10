@@ -184,7 +184,6 @@ app.put("/updateUser/:id", verifyJWT, (req, res) => {
     });
 });
 
-
 app.get("/todo", verifyJWT, (req, res) => {
     const q = "SELECT * FROM todo_list;"
     db.query(q, (err, data) => {
@@ -195,10 +194,9 @@ app.get("/todo", verifyJWT, (req, res) => {
 app.post("/todo", verifyJWT, (req, res) => {
 
     const a = "select max(position) from todo_list where author = ?"
-    const b = db.query(a, req.body.author, (err, results) => {
+    db.query(a, req.body.author, (err, results) => {
         if (err) return res.json(err)
         const maxPosition = results[0]['max(position)'] + 1
-
         const values = [
             req.body.name,
             req.body.author,
@@ -206,20 +204,11 @@ app.post("/todo", verifyJWT, (req, res) => {
             maxPosition
         ]
         const q = "INSERT INTO todo_list (name, author, filter, position) VALUES (?)"
-
         db.query(q, [values], (err, results) => {
             if (err) return res.json(err)
             return res.json(results.insertId)
         })
-
-
-
     })
-
-
-
-
-
 })
 app.put("/todo/:id", verifyJWT, (req, res) => {
     let q, values;

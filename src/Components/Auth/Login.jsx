@@ -13,10 +13,11 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {Link as RouterLink, LinkProps as RouterLinkProps, useNavigate} from 'react-router-dom';
-import {useEffect, useState, useRef} from "react";
+import {useEffect, useState, useRef, useContext} from "react";
 import AcUnitIcon from '@mui/icons-material/AcUnit';
 
 import AuthService from "../../Services/auth.service";
+import {AppDataContext} from "../Context/DataContext";
 
 function Copyright(props) {
     return (
@@ -35,7 +36,6 @@ const theme = createTheme();
 
 export default function Login(props) {
     let navigate = useNavigate();
-
     const [userEmail, setUserEmail] = useState("");
     const [userPassword, setUserPassword] = useState("");
 
@@ -46,7 +46,6 @@ export default function Login(props) {
                 navigate("/")
             })
         };
-
 
     return (
 

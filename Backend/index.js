@@ -39,14 +39,14 @@ const saltRounds = 10
 const verifyJWT = (req, res, next) => {
     const token = req.headers["x-access-token"]
     if (!token) {
-        return res.status(403).send({ message: "No token provided!" });
+        return res.status(403).send({message: "No token provided!"});
     } else {
         jwt.verify(token, "jwtSecret", (err, decoded) => {
             if (err) {
                 if (err instanceof jwt.TokenExpiredError) {
-                    return res.status(401).send({ message: "Unauthorized! Access Token was expired!" });
+                    return res.status(401).send({message: "Unauthorized! Access Token was expired!"});
                 }
-                return res.sendStatus(401).send({ message: "Unauthorized!" });
+                return res.sendStatus(401).send({message: "Unauthorized!"});
             } else {
                 req.userId = decoded.id;
                 next();
@@ -69,7 +69,7 @@ app.post("/login", (req, res) => {
                     if (response) {
                         const id = result[0].id
                         // Генерируем новый refresh token
-                        const refreshToken = jwt.sign({id}, 'refreshTokenSecret', { expiresIn: '30d' });
+                        const refreshToken = jwt.sign({id}, 'refreshTokenSecret', {expiresIn: '30d'});
                         // Сохраняем refreshToken в базу данных
                         db.query('UPDATE users SET refresh_token = ? WHERE id = ?', [refreshToken, id]);
                         const token = jwt.sign({id}, "jwtSecret", {
@@ -125,19 +125,26 @@ app.post("/register", (req, res) => {
     const ifUserExist = "SELECT * FROM users WHERE email = ?"
     db.query(ifUserExist, userEmail, (err, result) => {
         if (result.length > 0) {
-            res.json({message: "Такой пользователи уже зарегистрирован, войдите", result: result})
-        } else {
-// добавление нового пользователя в БД
-            bcrypt.hash(userPassword, saltRounds, (err, hash) => {
-                const q = "INSERT INTO users (id, first_name, last_name, email, password) VALUES (?, ?, ?, ?, ?)"
-                db.query(q, [id, userFirstName, userLastName, userEmail, hash], (err) => {
-                    if (err) return res.json(err)
-                    res.json({message: "Пользователь создан"})
+            res.json({message: "Такой пользователь уже зарегистрирован, войдите", result: result})
+        } else { // добавление нового пользователя в БД
+            const q = "select max(position) from users"
+            db.query(q, (err, result) => {
+                const maxPosition = result[0]['max(position)'];
+                const newPosition = maxPosition + 1
+                bcrypt.hash(userPassword, saltRounds, (err, hash) => {
+                    const q = "INSERT INTO users (id, first_name, last_name, email, password, position) VALUES (?, ?, ?, ?, ?, ?)"
+                    db.query(q, [id, userFirstName, userLastName, userEmail, hash, newPosition], (err) => {
+                        if (err) return res.json(err)
+                        res.json({message: "Пользователь создан"})
+                    })
                 })
+                if (err) {
+                    console.log(err)
+                }
+
             })
-            if (err) {
-                console.log(err)
-            }
+
+
         }
     })
 })
@@ -178,7 +185,6 @@ app.put("/updateUser/:id", verifyJWT, (req, res) => {
 });
 
 
-
 app.get("/todo", verifyJWT, (req, res) => {
     const q = "SELECT * FROM todo_list;"
     db.query(q, (err, data) => {
@@ -187,17 +193,33 @@ app.get("/todo", verifyJWT, (req, res) => {
     })
 })
 app.post("/todo", verifyJWT, (req, res) => {
-    const values = [
-        req.body.name,
-        req.body.author,
-        req.body.filter
-    ]
-    const q = "INSERT INTO todo_list (name, author, filter) VALUES (?)"
 
-    db.query(q, [values], (err, results) => {
+    const a = "select max(position) from todo_list where author = ?"
+    const b = db.query(a, req.body.author, (err, results) => {
         if (err) return res.json(err)
-        return res.json(results.insertId)
+        const maxPosition = results[0]['max(position)'] + 1
+
+        const values = [
+            req.body.name,
+            req.body.author,
+            req.body.filter,
+            maxPosition
+        ]
+        const q = "INSERT INTO todo_list (name, author, filter, position) VALUES (?)"
+
+        db.query(q, [values], (err, results) => {
+            if (err) return res.json(err)
+            return res.json(results.insertId)
+        })
+
+
+
     })
+
+
+
+
+
 })
 app.put("/todo/:id", verifyJWT, (req, res) => {
     let q, values;
@@ -234,7 +256,7 @@ app.get("/task", verifyJWT, (req, res) => {
         return res.json(data)
     })
 })
-app.post("/task", verifyJWT,  (req, res) => {
+app.post("/task", verifyJWT, (req, res) => {
     const values = [
         req.body.todo_id,
         req.body.title,

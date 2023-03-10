@@ -8,8 +8,11 @@ function DataContext({children}) {
     const [todoList, setTodoList] = useState([])
     const [taskList, setTaskList] = useState([])
     const [userList, setUserList] = useState([])
-    const getCurrentUser = AuthService.getCurrentUser();
-    const currentUser = getCurrentUser?.result[0]
+    const [currentUser, setCurrentUser] = useState({})
+
+    // const getCurrentUser = AuthService.getCurrentUser();
+    // const currentUser = getCurrentUser?.result[0]
+
     useEffect(() => {
         UserService.getTodoList()
             .then(response => {
@@ -40,6 +43,7 @@ function DataContext({children}) {
         userList,
         setUserList,
         currentUser,
+        setCurrentUser,
     }
 
     return <AppDataContext.Provider value={value}>

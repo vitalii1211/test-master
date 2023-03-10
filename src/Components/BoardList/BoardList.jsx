@@ -16,9 +16,12 @@ import {
 } from "@dnd-kit/core";
 import Droppable from "./Droppable";
 import {TodoItem} from "../Todo/TodoItem";
+import AuthService from "../../Services/auth.service";
 
 function BoardList({API_URL}) {
     const data = useContext(AppDataContext)
+    const getCurrentUser = AuthService.getCurrentUser();
+
     const [editMode, setEditMode] = useState(false)
     const [searchItem, setSearchItem] = useState("")
     const [selectedUsers, setSelectedUsers] = useState([]);
@@ -42,7 +45,8 @@ function BoardList({API_URL}) {
         UserService.getUserList()
             .then(response => {
                     data.setUserList(response.data)
-                    const findCurrentUser = response.data.find(a => a.id === data.currentUser.id)
+                    data.setCurrentUser(getCurrentUser.result[0])
+                    const findCurrentUser = response.data.find(a => a.id === getCurrentUser.result[0].id)
                     setSortType(findCurrentUser.sort_type)
                     if (findCurrentUser.selectedUsers) {
                         const selectedUsersOfCurrentUser = JSON.parse(findCurrentUser.selectedUsers)

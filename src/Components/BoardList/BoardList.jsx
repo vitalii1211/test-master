@@ -119,6 +119,7 @@ function BoardList({API_URL}) {
         console.log("over", over)
     }
 
+
     function dragEndHandler(event) {
         const {active, over} = event;
         const activeItem = items.find(item => item.id === active.id)

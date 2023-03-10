@@ -3,7 +3,7 @@ import TaskItem from "./TaskItem";
 import {AppDataContext} from "../Context/DataContext";
 
 
-function TaskList({ filterState, todoItem, editMode, searchItem }) {
+function TaskList({ filterState, todoItem, searchItem }) {
     const data = useContext(AppDataContext)
 
      const filteredItems = data.taskList
@@ -33,7 +33,6 @@ function TaskList({ filterState, todoItem, editMode, searchItem }) {
                         <TaskItem
                             key={taskItem.id}
                             taskItem={taskItem}
-                            editMode={editMode}
                         />
                     )
                 : "Здесь пусто"

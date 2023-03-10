@@ -22,10 +22,7 @@ function BoardList({API_URL}) {
     const data = useContext(AppDataContext)
     const getCurrentUser = AuthService.getCurrentUser();
 
-    const [editMode, setEditMode] = useState(false)
     const [searchItem, setSearchItem] = useState("")
-    const [selectedUsers, setSelectedUsers] = useState([]);
-    const [sortType, setSortType] = useState("")
     const [activeTodo, setActiveTodo] = useState(null)
     const [currentUser, setCurrentUser] = useState(getCurrentUser)
 
@@ -40,27 +37,11 @@ function BoardList({API_URL}) {
         }),
     );
 
-    useEffect(() => {
-        UserService.getUserList()
-            .then(response => {
-                    data.setUserList(response.data)
-                    data.setCurrentUser(getCurrentUser.result[0])
-                    const findCurrentUser = response.data.find(a => a.id === getCurrentUser.result[0].id)
-                    setSortType(findCurrentUser.sort_type)
-                    if (findCurrentUser.selectedUsers) {
-                        const selectedUsersOfCurrentUser = JSON.parse(findCurrentUser.selectedUsers)
-                        setSelectedUsers(selectedUsersOfCurrentUser)
-                    } else { // если массива нет - например, null у нового пользователя
-                        setSelectedUsers([])
-                    }
-                },
-                (error) => {
-                    console.log(error)
-                });
-    }, []);
+
+
 
     function SwitchEditMode() {
-        setEditMode(!editMode)
+        data.setEditMode(!data.editMode)
     }
 
     // блок скрытия карточке по поиску
@@ -79,7 +60,7 @@ function BoardList({API_URL}) {
     }, [])
     const todoListAfterSearch = data.todoList.filter(item => foundEverywhereUnique.includes(item.id))
 
-    const orderedUserList = selectedUsers.map((id) =>
+    const orderedUserList = data.selectedUsers.map((id) =>
         data.userList.find((user) => user.id === id)
     );
 
@@ -98,11 +79,11 @@ function BoardList({API_URL}) {
     const sorted30 = orderedUserList
 
     let boardList;
-    if (sortType === "10") {
+    if (data.sortType === "10") {
         boardList = sorted10;
-    } else if (sortType === "20") {
+    } else if (data.sortType === "20") {
         boardList = sorted20;
-    } else if (sortType === "30") {
+    } else if (data.sortType === "30") {
         boardList = sorted30;
     }
 
@@ -194,14 +175,9 @@ function BoardList({API_URL}) {
     return (
         <div>
             <Header
-                editMode={editMode}
                 SwitchEditMode={SwitchEditMode}
                 searchItem={searchItem}
                 setSearchItem={setSearchItem}
-                selectedUsers={selectedUsers}
-                setSelectedUsers={setSelectedUsers}
-                sortType={sortType}
-                setSortType={setSortType}
                 currentUser={currentUser}
             />
             <DndContext
@@ -214,16 +190,14 @@ function BoardList({API_URL}) {
                 <Grid container spacing={2} columns={16} style={{paddingInline: '30px'}}>
                     {boardList &&
                         boardList
-                            .filter(user => selectedUsers.includes(user.id))
+                            .filter(user => data.selectedUsers.includes(user.id))
                             .map(user =>
                                 <Droppable id={user.id} key={user.id}>
                                     <BoardItem
                                         key={user.id}
                                         user={user}
                                         todoListAfterSearch={todoListAfterSearch}
-                                        editMode={editMode}
                                         searchItem={searchItem}
-                                        sortType={sortType}
                                         items={boardItems}
                                         activeTodo={activeTodo}
                                     />
@@ -234,7 +208,7 @@ function BoardList({API_URL}) {
                 <DragOverlay>
                     <TodoItem
                         todoItem={activeTodo}
-                        editMode={editMode}
+                        editMode={data.editMode}
                         searchItem={searchItem}
                         setSearchItem={setSearchItem}
                         user={currentUser}

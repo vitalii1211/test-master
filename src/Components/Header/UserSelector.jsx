@@ -10,7 +10,7 @@ import api from "../../Services/api";
 import {AppDataContext} from "../Context/DataContext";
 
 
-const UserSelector = ({selectedUsers, setSelectedUsers}) => {
+const UserSelector = () => {
     const data = useContext(AppDataContext)
 
     const ITEM_HEIGHT = 48;
@@ -29,7 +29,7 @@ const UserSelector = ({selectedUsers, setSelectedUsers}) => {
         } catch (err) {
             console.log(err)
         }
-        setSelectedUsers(event.target.value)
+        data.setSelectedUsers(event.target.value)
     };
 
     const myUserList = data.userList.map(user => user.id === data.currentUser.id
@@ -45,10 +45,10 @@ const UserSelector = ({selectedUsers, setSelectedUsers}) => {
                 labelId="demo-multiple-checkbox-label"
                 id="demo-multiple-checkbox"
                 multiple
-                value={selectedUsers}
+                value={data.selectedUsers}
                 onChange={handleChange}
                 input={<OutlinedInput label="Показать карточки пользователей"/>}
-                renderValue={() => selectedUsers.map((selectedUser) => {
+                renderValue={() => data.selectedUsers.map((selectedUser) => {
                     const user = myUserList.find((userInList) => userInList.id === selectedUser);
                     return user
                         ? user.id !== data.currentUser.id
@@ -73,7 +73,7 @@ const UserSelector = ({selectedUsers, setSelectedUsers}) => {
                     .map((user) => {
                         return (
                             <MenuItem key={user.id} value={user.id}>
-                                <Checkbox checked={selectedUsers.includes(user.id)}/>
+                                <Checkbox checked={data.selectedUsers.includes(user.id)}/>
                                 <ListItemText primary={user.first_name + " " + user.last_name}/>
                             </MenuItem>
                         );

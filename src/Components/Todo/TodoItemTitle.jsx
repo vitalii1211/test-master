@@ -1,6 +1,8 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import DeleteTodoItem from "./DeleteTodoItem";
 import Typography from "@mui/material/Typography";
+import {AppDataContext} from "../Context/DataContext";
+
 
 function TodoItemTitle(
     {
@@ -8,11 +10,12 @@ function TodoItemTitle(
         OnClickSaveUpdatedTitle,
         todoItem,
         editState,
-        editMode,
         inputValue,
         setInputValue,
         OnClickCancelEdit
     }) {
+    const data = useContext(AppDataContext)
+
 
     return (
         <>
@@ -25,7 +28,7 @@ function TodoItemTitle(
                     <>
                         {todoItem.name}
 
-                        {editMode && (
+                        {data.editMode && (
                             <DeleteTodoItem
                                 todoItem={todoItem}
                             />

@@ -5,7 +5,7 @@ import api from "../../Services/api";
 import {AppDataContext} from "../Context/DataContext";
 
 
-function TaskItem({taskItem, editMode}) {
+function TaskItem({taskItem}) {
     const data = useContext(AppDataContext)
 
     const [editState, setEditState] = useState(false)
@@ -20,7 +20,8 @@ function TaskItem({taskItem, editMode}) {
                         ? {...taskItem, title: inputValue}
                         : value === "isDeleted"
                             ? {...taskItem, isDeleted: !taskItem.isDeleted}
-                            : taskItem : taskItem)
+                            : taskItem
+                : taskItem)
         data.setTaskList(updatedTaskList);
         if (value === "title") {
             setEditState(!editState)
@@ -44,8 +45,6 @@ function TaskItem({taskItem, editMode}) {
     }
 
 
-
-
     return (
         <div>
             <table>
@@ -66,13 +65,12 @@ function TaskItem({taskItem, editMode}) {
                             taskItem={taskItem}
                             editState={editState}
                             setEditState={setEditState}
-                            editMode={editMode}
                             HandleUpdateItem={HandleUpdateItem}
                         />
                     </td>
                     <td><>
                         {!taskItem.isDeleted
-                            ? !editState && editMode &&
+                            ? !editState && data.editMode &&
                             <button onClick={() => HandleUpdateItem(taskItem.id, "isDeleted")}>X</button>
                             : <button onClick={() => HandleUpdateItem(taskItem.id, "isDeleted")}>---</button>
                         }

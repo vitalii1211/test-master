@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import BoardList from "./Components/BoardList/BoardList";
+import BoardList from "./Components/Board/BoardList";
 import Register from "./Components/Auth/Register";
 import Login from "./Components/Auth/Login";
 import {Routes, Route, BrowserRouter} from 'react-router-dom'

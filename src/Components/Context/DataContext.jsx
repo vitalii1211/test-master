@@ -9,9 +9,12 @@ function DataContext({children}) {
     const [taskList, setTaskList] = useState([])
     const [userList, setUserList] = useState([])
     const [currentUser, setCurrentUser] = useState({})
+    const [sortType, setSortType] = useState("")
+    const [selectedUsers, setSelectedUsers] = useState([]);
+    const [editMode, setEditMode] = useState(false)
 
-    // const getCurrentUser = AuthService.getCurrentUser();
-    // const currentUser = getCurrentUser?.result[0]
+
+    const getCurrentUser = AuthService.getCurrentUser();
 
     useEffect(() => {
         UserService.getTodoList()
@@ -21,8 +24,7 @@ function DataContext({children}) {
                 (error) => {
                     console.log(error)
                 })
-    }, []); // через запрос с БД и рендеринг, иначе фильтр Task-ов карточки не обновляется
-    // при сркытии/открытии карточек пользователя
+    }, []);
 
     useEffect(() => {
         UserService.getTaskList()
@@ -34,6 +36,24 @@ function DataContext({children}) {
                 });
     }, []);
 
+    useEffect(() => {
+        UserService.getUserList()
+            .then(response => {
+                    setUserList(response.data)
+                    setCurrentUser(getCurrentUser.result[0])
+                    const findCurrentUser = response.data.find(a => a.id === getCurrentUser.result[0].id)
+                    setSortType(findCurrentUser.sort_type)
+                    if (findCurrentUser.selectedUsers) {
+                        const selectedUsersOfCurrentUser = JSON.parse(findCurrentUser.selectedUsers)
+                        setSelectedUsers(selectedUsersOfCurrentUser)
+                    } else { // если массива нет - например, null у нового пользователя
+                        setSelectedUsers([])
+                    }
+                },
+                (error) => {
+                    console.log(error)
+                });
+    }, []);
 
     const value = {
         todoList,
@@ -44,6 +64,12 @@ function DataContext({children}) {
         setUserList,
         currentUser,
         setCurrentUser,
+        sortType,
+        setSortType,
+        selectedUsers,
+        setSelectedUsers,
+        editMode,
+        setEditMode,
     }
 
     return <AppDataContext.Provider value={value}>

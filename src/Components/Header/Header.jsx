@@ -1,13 +1,14 @@
 import React, {useContext} from 'react';
 import FormControlLabel from "@mui/material/FormControlLabel";
 import {Switch} from "@mui/material";
-import Search from "../Search";
+import Search from "./Search";
 import AddTodoItem from "../Todo/AddTodoItem";
 import UserSelector from "./UserSelector";
 import AuthService from "../../Services/auth.service";
 import {useNavigate} from "react-router-dom";
-import {AppDataContext} from "../Context/DataContext";
 import UserListSortSelector from "./UserListSortSelector";
+import {AppDataContext} from "../Context/DataContext";
+
 
 function Header(props) {
     const data = useContext(AppDataContext)
@@ -21,7 +22,7 @@ function Header(props) {
 
     return (
         <div>
-            <FormControlLabel sx={{m: 3}} onClick={props.SwitchEditMode} control={<Switch/>} label={props.editMode ?
+            <FormControlLabel sx={{m: 3}} onClick={props.SwitchEditMode} control={<Switch/>} label={data.editMode ?
                 "Редактирование"
                 : "Чтение"
             }/>
@@ -30,20 +31,14 @@ function Header(props) {
                 setSearchItem={props.setSearchItem}
             />
 
-            {props.editMode &&
+            {data.editMode &&
                 <AddTodoItem/>
             }
 
             <UserSelector
-                userList={data.userList}
-                selectedUsers={props.selectedUsers}
-                setSelectedUsers={props.setSelectedUsers}
             />
 
-            <UserListSortSelector
-                sortType={props.sortType}
-                setSortType={props.setSortType}
-            />
+            <UserListSortSelector/>
 
             <strong style={{ paddingRight: "10px" }}> Привет, {fullName}! </strong>
             <button onClick={logout}>Logout</button>

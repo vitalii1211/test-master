@@ -1,9 +1,12 @@
-import React from 'react';
+import React, {useContext} from 'react';
+import {AppDataContext} from "../Context/DataContext";
 
-function TaskItemTitle({ inputValue, setInputValue, taskItem, editState, setEditState, editMode, HandleUpdateItem }) {
+function TaskItemTitle({ inputValue, setInputValue, taskItem, editState, setEditState, HandleUpdateItem }) {
+    const data = useContext(AppDataContext)
+
 
     const OnClickChangeEditState = () => {
-        if (editMode)
+        if (data.editMode)
             setEditState(true)
     }
 

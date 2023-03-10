@@ -5,7 +5,7 @@ import api from "../../Services/api";
 import {SortableContext} from "@dnd-kit/sortable";
 
 
-function TodoList({todoListAfterSearch, user, editMode, searchItem, setSearchItem, todo1, setTodo1, activeTodo}) {
+function TodoList({ todoListAfterSearch, user, searchItem, setSearchItem, todo1, setTodo1 }) {
     const data = useContext(AppDataContext)
 
     const todoListOfUser = todoListAfterSearch
@@ -28,7 +28,6 @@ function TodoList({todoListAfterSearch, user, editMode, searchItem, setSearchIte
                     <SortableContext items={todoListOfUser} key={todoItem.id}>
                         <TodoItem
                             todoItem={todoItem}
-                            editMode={editMode}
                             searchItem={searchItem}
                             setSearchItem={setSearchItem}
                             todoListFinal={todoListOfUser}

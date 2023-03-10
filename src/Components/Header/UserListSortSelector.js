@@ -10,7 +10,7 @@ export default function UserListSortSelector(props) {
     const data = useContext(AppDataContext)
 
     async function changeHandler(value) {
-        props.setSortType(value)
+        data.setSortType(value)
         try {
             await api.put("http://localhost:8800/updateUser/" + data.currentUser.id, {sort_type: value})
         } catch (err) {
@@ -24,7 +24,7 @@ export default function UserListSortSelector(props) {
                     Сортировать списки пользователей по
                 </InputLabel>
                 <NativeSelect
-                    value={props.sortType}
+                    value={data.sortType}
                     onChange={(e) => changeHandler(e.target.value)}
                     inputProps={{
                         name: 'age',

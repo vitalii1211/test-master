@@ -8,8 +8,7 @@ import {CSS} from '@dnd-kit/utilities';
 import {useSortable} from "@dnd-kit/sortable";
 
 
-export function TodoItem({ todoItem, editMode, searchItem }) {
-
+export function TodoItem({ todoItem, searchItem }) {
     const [filterState, setFilterState] = useState(todoItem.filter)
 
     const {
@@ -35,7 +34,7 @@ export function TodoItem({ todoItem, editMode, searchItem }) {
 
 
     const OnClickChangeEditState = () => {
-        if (editMode)
+        if (data.editMode)
             setEditState(!editState)
     }
 
@@ -71,14 +70,12 @@ export function TodoItem({ todoItem, editMode, searchItem }) {
                         todoItem={todoItem}
                         editState={editState}
                         title={todoItem.title}
-                        editMode={editMode}
                         inputValue={inputValue}
                         setInputValue={setInputValue}
                         OnClickCancelEdit={OnClickCancelEdit}
                     />
                     <TaskContainer
                         todoItem={todoItem}
-                        editMode={editMode}
                         searchItem={searchItem}
                         filterState={filterState}
                         setFilterState={setFilterState}

@@ -1,7 +1,7 @@
 import React from 'react';
 import TodoList from "../Todo/TodoList";
 
-const BoardItem = ({user, todoListAfterSearch, editMode, searchItem, sortType, items, activeTodo }) => {
+const BoardItem = ({user, todoListAfterSearch, searchItem, items, activeTodo }) => {
 
     return (
             <>
@@ -12,9 +12,7 @@ const BoardItem = ({user, todoListAfterSearch, editMode, searchItem, sortType, i
                     <TodoList
                         todoListAfterSearch={todoListAfterSearch}
                         user={user}
-                        editMode={editMode}
                         searchItem={searchItem}
-                        sortType={sortType}
                         items={items}
                         activeTodo={activeTodo}
                     />
